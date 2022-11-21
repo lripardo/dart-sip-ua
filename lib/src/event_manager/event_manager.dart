@@ -101,7 +101,7 @@ class EventManager {
 
     if (targets != null) {
       // avoid concurrent modification
-      List<dynamic> copy = List<dynamic>.from(targets);
+      List<dynamic> copy = [...targets];
 
       for (dynamic target in copy) {
         try {
