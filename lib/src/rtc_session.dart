@@ -55,6 +55,7 @@ class SIPTimers {
 class RFC4028Timers {
   RFC4028Timers(this.enabled, this.refreshMethod, this.defaultExpires,
       this.currentExpires, this.running, this.refresher, this.timer);
+
   bool enabled;
   SipMethod refreshMethod;
   int? defaultExpires;
@@ -1466,7 +1467,9 @@ class RTCSession extends EventManager implements Owner {
     // Close local MediaStream if it was not given by the user.
     if (_localMediaStream != null && _localMediaStreamLocallyGenerated) {
       logger.d('close() | closing local MediaStream');
-      await _localMediaStream!.dispose();
+      if (_localMediaStream?.active ?? false) {
+        await _localMediaStream!.dispose();
+      }
       _localMediaStream = null;
     }
 
