@@ -1467,9 +1467,7 @@ class RTCSession extends EventManager implements Owner {
     // Close local MediaStream if it was not given by the user.
     if (_localMediaStream != null && _localMediaStreamLocallyGenerated) {
       logger.d('close() | closing local MediaStream');
-      if (_localMediaStream?.active ?? false) {
-        await _localMediaStream!.dispose();
-      }
+      //await _localMediaStream!.dispose();
       _localMediaStream = null;
     }
 
