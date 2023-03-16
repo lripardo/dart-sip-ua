@@ -1453,6 +1453,13 @@ class RTCSession extends EventManager implements Owner {
       return;
     }
     _status = C.STATUS_TERMINATED;
+    // Close local MediaStream if it was not given by the user.
+    if (_localMediaStream != null && _localMediaStreamLocallyGenerated) {
+      logger.d('close() | closing local MediaStream');
+      await _localMediaStream!.dispose();
+      _localMediaStream = null;
+    }
+
     // Terminate RTC.
     if (_connection != null) {
       try {
@@ -1463,12 +1470,6 @@ class RTCSession extends EventManager implements Owner {
         logger.e(
             'close() | error closing the RTCPeerConnection: ${error.toString()}');
       }
-    }
-    // Close local MediaStream if it was not given by the user.
-    if (_localMediaStream != null && _localMediaStreamLocallyGenerated) {
-      logger.d('close() | closing local MediaStream');
-      //await _localMediaStream!.dispose();
-      _localMediaStream = null;
     }
 
     // Terminate signaling.
