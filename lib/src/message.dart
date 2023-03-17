@@ -23,7 +23,7 @@ class Message extends EventManager with Applicant {
   // Whether an incoming message has been replied.
   bool _is_replied = false;
   // Custom message empty object for high level use.
-  final Map<String, dynamic>? _data = <String, dynamic>{};
+  final Map<String, dynamic> _data = <String, dynamic>{};
   String? get direction => _direction;
 
   NameAddrHeader? get local_identity => _local_identity;
@@ -146,9 +146,10 @@ class Message extends EventManager with Applicant {
     if (_closed) {
       return;
     }
-    if (RegExp(r'^1[0-9]{2}$').hasMatch(response!.status_code)) {
+    if (RegExp(r'^1[0-9]{2}$').hasMatch(response!.status_code.toString())) {
       // Ignore provisional responses.
-    } else if (RegExp(r'^2[0-9]{2}$').hasMatch(response.status_code)) {
+    } else if (RegExp(r'^2[0-9]{2}$')
+        .hasMatch(response.status_code.toString())) {
       _succeeded('remote', response);
     } else {
       String cause = Utils.sipErrorCause(response.status_code);
