@@ -110,7 +110,7 @@ class SIPUAHelper extends EventManager {
     return _calls[id];
   }
 
-  void start(UaSettings uaSettings) async {
+  Future<void> start(UaSettings uaSettings) async {
     if (_ua != null) {
       logger.w('UA instance already exist!, stopping UA and creating a one...');
       _ua!.stop();
@@ -345,8 +345,8 @@ class SIPUAHelper extends EventManager {
   }
 
   Message sendMessage(String target, String body,
-      [Map<String, dynamic>? options]) {
-    return _ua!.sendMessage(target, body, options);
+      [Map<String, dynamic>? options, Map<String, dynamic>? params]) {
+    return _ua!.sendMessage(target, body, options, params);
   }
 
   void subscribe(String target, String event, String contentType) {
@@ -505,6 +505,15 @@ class Call {
   void sendInfo(String contentType, String body, Map<String, dynamic> options) {
     assert(_session != null, 'ERROR(sendInfo): rtc session is invalid');
     _session.sendInfo(contentType, body, options);
+  }
+
+  void sendMessage(String body, [Map<String, dynamic>? options]) {
+    assert(_session != null, 'ERROR(sendMessage): rtc session is invalid');
+
+    options?.putIfAbsent('body', () => body);
+
+    _session.sendRequest(DartSIP_C.SipMethod.MESSAGE,
+        options ?? <String, dynamic>{'body': body});
   }
 
   String? get remote_display_name {
